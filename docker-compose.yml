@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+    ports:
+      - "8000:80"  # Map host port 8080 to container port 80
+    volumes:
+      - ./:/var/www/html
+
+  mysql:
+    build:
+      context: .
+      dockerfile: dockerfiles/mysql.Dockerfile
+    ports:
+      - "3306:3306"  # Map host port 3306 to container port 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  phpmyadmin:
+    build:
+      context: .
+      dockerfile: dockerfiles/phpmyadmin.Dockerfile
+    ports:
+      - "8181:80"  # Map host port 8181 to container port 80
+    environment:
+      PMA_HOST: mysql

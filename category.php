@@ -1,0 +1,82 @@
+<?php
+
+include_once "includes/header.php";
+
+$category = new Category();
+$data = $category->index();
+$i = 1;
+
+if ($category->store($_POST)) {
+    echo "<script>location.href='category.php'</script>";
+}
+
+if ($category->destroy($_POST)) {
+    echo "<script>location.href='category.php'</script>";
+}
+?>
+
+<div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold">Category</h1>
+    <button onclick="toggleModal('#add-category')" class="bg-violet-800 hover:bg-violet-500 px-7 py-1 text-white block text-sm rounded-sm">Add</button>
+</div>
+<table class="w-full mt-5 bg-gray-100 table-auto rounded-md">
+    <thead>
+        <tr>
+            <th class="text-left">No.</th>
+            <th class="text-left">Name</th>
+            <th class="text-left">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <?php foreach ($data as $item): ?>
+            <tr class="hover:bg-gray-200">
+                <td><?= $i; $i++; ?></td>
+                <td><?= $item->name; ?></td>
+                <td>
+                    <button onclick="toggleModal('#add-category')" class="bg-orange-500 hover:bg-orange-600 px-7 py-1 text-white text-sm rounded-sm">Edit</button>
+                    <button onclick="toggleModal('#destroy-category', <?= $item->id; ?>)" class="bg-red-500 hover:bg-red-600 px-7 py-1 text-white text-sm rounded-sm">Delete</button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+
+    </tbody>
+</table>
+
+<div class="hidden modal" id="add-category">
+    <div class="absolute top-0 left-0 w-full h-screen bg-black/70 flex justify-center items-center">
+        <div class="w-4/12 px-10 py-10 rounded-lg shadow-2xl bg-white h-fit">
+            <h1 class="text-2xl font-bold mb-5 text-center">Add Category</h1>
+            <form action="" method="post">
+                <div class="mb-5">
+                    <label class="font-bold block mb-2" for="name">Name <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" class="block p-1 border-gray-400 w-full rounded-sm text-sm">
+                </div>
+                <div class="space-x-1">
+                    <button onclick="closeModals()" type="button" class="bg-slate-200 px-5 rounded-sm py-1 text-sm hover:bg-slate-300">Close</button>
+                    <button type="submit" name="submit" class="bg-violet-800 text-white px-5 rounded-sm py-1 text-sm hover:bg-violet-600">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="hidden modal" id="destroy-category">
+    <div class="absolute top-0 left-0 w-full h-screen bg-black/70 flex justify-center items-center">
+        <div class="w-4/12 px-10 py-10 rounded-lg shadow-2xl bg-white h-fit">
+            <div class="mb-5">
+                <h1 class="text-2xl font-bold mb-3 text-center">Delete Category</h1>
+                <p class="text-center">Are you sure, you want to delete?</p>
+            </div>
+            <form action="" method="post">
+                <input type="hidden" id="destroy-id" name="id">
+                <div class="space-x-1 flex justify-center">
+                    <button onclick="closeModals()" type="button" class="bg-slate-200 px-5 rounded-sm py-1 text-sm hover:bg-slate-300">Close</button>
+                    <button type="submit" name="destroy-submit" class="bg-violet-800 text-white px-5 rounded-sm py-1 text-sm hover:bg-violet-600">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php include_once "includes/footer.php"; ?>
