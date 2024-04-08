@@ -6,11 +6,15 @@ $category = new Category();
 $data = $category->index();
 $i = 1;
 
-if ($category->store($_POST)) {
+if ($category->store(request: $_POST)) {
     echo "<script>location.href='category.php'</script>";
 }
 
-if ($category->destroy($_POST)) {
+if ($category->update(request: $_POST)) {
+    echo "<script>location.href='category.php'</script>";
+}
+
+if ($category->destroy(request: $_POST)) {
     echo "<script>location.href='category.php'</script>";
 }
 ?>
@@ -34,7 +38,7 @@ if ($category->destroy($_POST)) {
                 <td><?= $i; $i++; ?></td>
                 <td><?= $item->name; ?></td>
                 <td>
-                    <button onclick="toggleModal('#add-category')" class="bg-orange-500 hover:bg-orange-600 px-7 py-1 text-white text-sm rounded-sm">Edit</button>
+                    <button onclick="toggleModal('#edit-category', <?= $item->id; ?>)" class="bg-orange-500 hover:bg-orange-600 px-7 py-1 text-white text-sm rounded-sm">Edit</button>
                     <button onclick="toggleModal('#destroy-category', <?= $item->id; ?>)" class="bg-red-500 hover:bg-red-600 px-7 py-1 text-white text-sm rounded-sm">Delete</button>
                 </td>
             </tr>
@@ -47,14 +51,33 @@ if ($category->destroy($_POST)) {
     <div class="absolute top-0 left-0 w-full h-screen bg-black/70 flex justify-center items-center">
         <div class="w-4/12 px-10 py-10 rounded-lg shadow-2xl bg-white h-fit">
             <h1 class="text-2xl font-bold mb-5 text-center">Add Category</h1>
-            <form action="" method="post">
+            <form method="post">
                 <div class="mb-5">
                     <label class="font-bold block mb-2" for="name">Name <span class="text-red-500">*</span></label>
                     <input type="text" name="name" class="block p-1 border-gray-400 w-full rounded-sm text-sm">
                 </div>
                 <div class="space-x-1">
                     <button onclick="closeModals()" type="button" class="bg-slate-200 px-5 rounded-sm py-1 text-sm hover:bg-slate-300">Close</button>
-                    <button type="submit" name="submit" class="bg-violet-800 text-white px-5 rounded-sm py-1 text-sm hover:bg-violet-600">Submit</button>
+                    <button type="submit" name="add-submit" class="bg-violet-800 text-white px-5 rounded-sm py-1 text-sm hover:bg-violet-600">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="hidden modal" id="edit-category">
+    <div class="absolute top-0 left-0 w-full h-screen bg-black/70 flex justify-center items-center">
+        <div class="w-4/12 px-10 py-10 rounded-lg shadow-2xl bg-white h-fit">
+            <h1 class="text-2xl font-bold mb-5 text-center">Edit Category</h1>
+            <form method="post">
+                <input type="hidden" id="edit-id" name="id">
+                <div class="mb-5">
+                    <label class="font-bold block mb-2" for="name">Name <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" class="block p-1 border-gray-400 w-full rounded-sm text-sm">
+                </div>
+                <div class="space-x-1">
+                    <button onclick="closeModals()" type="button" class="bg-slate-200 px-5 rounded-sm py-1 text-sm hover:bg-slate-300">Close</button>
+                    <button type="submit" name="update-submit" class="bg-violet-800 text-white px-5 rounded-sm py-1 text-sm hover:bg-violet-600">Submit</button>
                 </div>
             </form>
         </div>
@@ -68,7 +91,7 @@ if ($category->destroy($_POST)) {
                 <h1 class="text-2xl font-bold mb-3 text-center">Delete Category</h1>
                 <p class="text-center">Are you sure, you want to delete?</p>
             </div>
-            <form action="" method="post">
+            <form method="post">
                 <input type="hidden" id="destroy-id" name="id">
                 <div class="space-x-1 flex justify-center">
                     <button onclick="closeModals()" type="button" class="bg-slate-200 px-5 rounded-sm py-1 text-sm hover:bg-slate-300">Close</button>

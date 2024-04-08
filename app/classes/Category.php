@@ -36,7 +36,47 @@ class Category
                 return false;
             }
         } catch (Exception $e) {
-            print($e);
+            return false;
+        }
+    }
+
+    public function getCategoryById($id): object|NULL
+    {
+        try {
+            $id = intval($id);
+
+            $sql = "SELECT * FROM `categories` WHERE `id`=:id AND `deleted_at` IS NULL";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindParam("id", $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $res = $stmt->fetch(PDO::FETCH_OBJ);
+            
+            return $res;
+        } catch (Exception $e) {
+            return NULL;
+        }
+    }
+
+    public function update(array $request): bool
+    {
+        try {
+            if (isset($request["update-submit"])) {
+                $id = intval($request["id"]);
+                $name = htmlspecialchars($request["name"]);
+                $updated_at = date("Y-m-d H:i:s", time());
+
+                $sql = "UPDATE `categories` SET `name`=:name, `updated_at`=:updated_at WHERE `id`=:id";
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam("id", $id, PDO::PARAM_INT);
+                $stmt->bindParam("name", $name, PDO::PARAM_STR);
+                $stmt->bindParam("updated_at", $updated_at, PDO::PARAM_STR);
+                $stmt->execute();
+    
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -59,7 +99,6 @@ class Category
                 return false;
             }
         } catch (Exception $e) {
-            print($e);
             return false;
         }
     }
