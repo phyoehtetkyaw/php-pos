@@ -8,23 +8,25 @@ function closeModals()
 function toggleModal(selector, id = null)
 {
     const mode = selector.split("-")[0];
+    const name = selector.split("-")[1];
+    
     if (mode == "#destroy") {
         $("#destroy-id").val(id);
     } else if (mode == "#edit") {
         $("#edit-id").val(id);
-        const response = getData(id);
+        const response = getData(id, name);
 
         if (response.status == 200) {
-            $("#edit-category form input[name='name']").val(response.data.name);
+            $(`#edit-${name} form input[name='name']`).val(response.data.name);
         }
     }
     $(selector).show();
 }
 
-function getData(id) {
+function getData(id, name) {
     let response = null;
     $.ajax({
-        url: `/api/get_category.php?id=${id}`,
+        url: `/api/get_${name}.php?id=${id}`,
         method: "GET",
         async: false,
         success: function(res) {
